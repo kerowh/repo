@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+	<meta charset="UTF-8">
+	<title>我的导航</title>
+	<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+	<header></header>
+	<main>
+		<div class="wrapper" id="div">
+
+		</div>
+	</main>
+	<footer></footer>
+</body>
+<script>
+	var keys = {
+		'0':['q','w','e','r','t','y','u','i','o','p'],
+		'1':['a','s','d','f','g','h','j','k','l'],
+		'2':['z','x','c','v','b','n','m'],
+		'length':3
+	}
+
+	var hash ={
+		'q':'qq.com','w':'weibo.com','e':'ele.me',
+		'r':'renren.com','t':'tianya.com','y':'youtube.com',
+		'u':'uc.com'
+	}
+
+	//取出localStorage中的uuu对应的值，这个桶是可能为空的。所以加上||‘’
+	//整体逻辑是，1.一定有一个确定了的hash表，但是在执行的时候，要先看一下hashInLocalStorage
+	//确认下有没有上次操作留下的hash值
+	//如果存在，则代表是有的，就用上次的hash覆盖以前的hash
+	//这样就能保证，hash值变成上次用户设置的
+	var hashInLocalStorage = JSON.parse(localStorage.getItem('uuu')||'null')
+	if(hashInLocalStorage){
+		hash = hashInLocalStorage
+	}
+	
+	index = 0;
+	while(index<keys.length){
+		div1 = document.createElement('div');
+		div.appendChild(div1);
+		row = keys[index]
+		index2 = 0
+		while(index2<row.length){
+			kbd = document.createElement('kbd')
+			div1.appendChild(kbd);
+			kbd.textContent=row[index2];
+			//在kbd中加一个按键，名称叫做编辑
+			button = document.createElement('button')
+			button.textContent ='编辑'
+			button.id = row[index2] 
+			//键盘点击事件，跟按键盘的事件一样
+			button.onclick =function(zxc){
+				// console.log("我被点击了")
+				//使用zxc.target来获取当前点击的值,然后获取他的id
+				//打印出来，就行了
+				// console.log(zxc.target.id)
+				key =zxc.target.id //q,w,e,r,t之类的
+				//获取用户输入的网址
+				x=prompt('给我一个网址')
+				//让hash的中对应的键值发生改变
+				hash[key]=x//hash值发生了变更
+
+				//这里的网站，好像没法保存，
+				//因为每次刷新页面，修改的js就没了。
+				//刷新了之后，只能执行以前写好的hash表，
+				//解决思路是，把用户修改的值放在一个地方，把修改的hash值存在来
+				//刷新再次打开之后，把用户修改的值，放在修改的位置上
+				//这样就起到了修改的效果
+				//这个地方是localStorage
+
+				localStorage.setItem('uuu',JSON.stringify(hash))
+				////名字uuu随便起的，作用是只要值发生了变化，
+				//就把hash放在里面，但是
+				//这个只能存放字符串，JSON.stringify就是把hash变成字符串
+				//把js存在浏览器里面。
+				
+			}
+			kbd.appendChild(button)
+			index2=index2+1
+		}
+		index = index+1
+	}
+
+	document.onkeypress = function(zxc){
+		// console.log(zxc)   //获得了一个hash表，包含了用户按键之后发生的所有的事情
+		//我们发现这个表中的['key']选项可以获得我们输入的建
+		//所以我们新建一个对象key来存储它
+		key = zxc['key']
+		//拿到键盘输入的值，在到hash表中拿到对应的地址
+		website = hash[key]
+		// location.href = 'http://'+website在当前页面打开
+		//在新窗口打开，导航的基本功能就做完了
+		window.open('http://'+website,'_blank')
+	}
+
+	
+	
+	
+</script>
+</html>
